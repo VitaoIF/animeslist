@@ -1,8 +1,11 @@
 package com.animeslist.animeslist.service;
 
+import com.animeslist.animeslist.dto.request.AnimeRequest;
+import com.animeslist.animeslist.dto.response.AnimeResponse;
 import com.animeslist.animeslist.entity.Anime;
 import com.animeslist.animeslist.entity.Category;
 import com.animeslist.animeslist.entity.Streaming;
+import com.animeslist.animeslist.mapper.AnimeMapper;
 import com.animeslist.animeslist.repository.AnimeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,6 +35,26 @@ public class AnimeService {
         return animeRepository.findAll();
     }
 
+    public AnimeResponse findById(Long id){
+        Anime anime = animeRepository.findById(id).orElseThrow(() -> new RuntimeException("Anime não encontrado"));
+        return AnimeMapper.toAnimeResponse(anime);
+    }
+
+    public void delete(Long id){
+        animeRepository.deleteById(id);
+    }
+
+    public AnimeResponse update(Long id, AnimeRequest animeRequest) {
+        Anime entity = animeRepository.getReferenceById(id);
+        updateAnime(entity, animeRequest);
+        Anime updated = animeRepository.save(entity);
+        return AnimeMapper.toAnimeResponse(updated);
+    }
+
+    public List<Anime> findByCategory(Long categoryId) {
+        return animeRepository.findAnimeByCategories(List.of(Category.builder().id(categoryId).build()));
+    }
+
     private List<Category> findCategories(List<Category> categories){
         List<Category> categoryList = new ArrayList<>();
         for (Category category: categories){
@@ -49,4 +72,15 @@ public class AnimeService {
 
         return streamingsList;
     }
+
+
+    private void updateAnime(Anime entity, AnimeRequest animeRequest){
+        entity.setTittle(animeRequest.tittle());
+        entity.setDescription(animeRequest.description());
+        entity.setRating(animeRequest.raiting());
+        entity.setStreamings(this.findStreamings(entity.getStreamings()));
+        entity.setCategories(this.findCategories(entity.getCategories()));
+        entity.setReleaseDate(animeRequest.releaseDate());
+    }
+
 }
