@@ -5,6 +5,7 @@ import com.animeslist.animeslist.dto.response.StreamingResponse;
 import com.animeslist.animeslist.entity.Streaming;
 import com.animeslist.animeslist.mapper.StreamingMapper;
 import com.animeslist.animeslist.service.StreamingService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +31,7 @@ public class StreamingController {
     }
 
     @PostMapping
-    public ResponseEntity<StreamingResponse> insert(@RequestBody StreamingRequest streamingRequest){
+    public ResponseEntity<StreamingResponse> insert(@Valid @RequestBody StreamingRequest streamingRequest){
         Streaming streaming = StreamingMapper.toStreaming(streamingRequest);
         Streaming savedStream = streamingService.insert(streaming);
         return ResponseEntity.status(HttpStatus.CREATED).body(StreamingMapper.toStreamingResponse(savedStream));

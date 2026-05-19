@@ -1,4 +1,6 @@
 package com.animeslist.animeslist.dto.request;
 
-public record CategoryRequest(String name) {
+import jakarta.validation.constraints.NotEmpty;
+
+public record CategoryRequest(@NotEmpty(message = "Informe o nome da categoria") String name) {
 }

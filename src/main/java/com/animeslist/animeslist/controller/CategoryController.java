@@ -5,6 +5,7 @@ import com.animeslist.animeslist.dto.response.CategoryResponse;
 import com.animeslist.animeslist.entity.Category;
 import com.animeslist.animeslist.mapper.CategoryMapper;
 import com.animeslist.animeslist.service.CategoryService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +31,7 @@ public class CategoryController {
     }
 
     @PostMapping
-    public ResponseEntity<CategoryResponse> insert(@RequestBody CategoryRequest categoryRequest){
+    public ResponseEntity<CategoryResponse> insert(@Valid @RequestBody CategoryRequest categoryRequest){
         Category category = CategoryMapper.toCategory(categoryRequest);
         Category savedCategory = categoryService.insert(category);
         return ResponseEntity.status(HttpStatus.CREATED).body(CategoryMapper.toCategoryResponse(savedCategory));

@@ -1,4 +1,6 @@
 package com.animeslist.animeslist.dto.request;
 
-public record StreamingRequest(String name) {
+import jakarta.validation.constraints.NotEmpty;
+
+public record StreamingRequest(@NotEmpty(message = "Informe o nome do streaming") String name) {
 }
