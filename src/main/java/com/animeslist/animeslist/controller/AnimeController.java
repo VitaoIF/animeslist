@@ -5,6 +5,7 @@ import com.animeslist.animeslist.dto.response.AnimeResponse;
 import com.animeslist.animeslist.entity.Anime;
 import com.animeslist.animeslist.mapper.AnimeMapper;
 import com.animeslist.animeslist.service.AnimeService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +21,7 @@ public class AnimeController {
     private AnimeService animeService;
 
     @PostMapping
-    public ResponseEntity<AnimeResponse> insert(@RequestBody AnimeRequest request){
+    public ResponseEntity<AnimeResponse> insert(@Valid @RequestBody AnimeRequest request){
         Anime saved = animeService.insert(AnimeMapper.toAnime(request));
         return ResponseEntity.ok(AnimeMapper.toAnimeResponse(saved));
     }
@@ -45,7 +46,7 @@ public class AnimeController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<AnimeResponse> update(@PathVariable Long id, @RequestBody AnimeRequest request){
+    public ResponseEntity<AnimeResponse> update(@PathVariable Long id, @Valid @RequestBody AnimeRequest request){
         AnimeResponse response = animeService.update(id, request);
         return ResponseEntity.ok().body(response);
     }
